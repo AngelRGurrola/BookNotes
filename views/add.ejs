@@ -4,10 +4,11 @@
         <div class="header-container">
             <button onclick="history.back()" class="add-search-btn">Return</button>
             <h2>Add a Book</h2>
+            <p>(Only 10 results per search)</p>
         </div>
 
 
-        <form action="/add/search" method="GET" class="add-form">
+        <form action="/add" method="POST" class="add-form">
 
             <div class="search-options">
                 <label>
@@ -28,7 +29,7 @@
         </form>
 
     </section>
-    <% if (locals.result) { %>
+    <% if (locals.results) { %>
         <section class="search-feed">
             <% results.forEach(result=> { %>
 
@@ -38,6 +39,7 @@
 
                         <!-- Book Cover -->
                         <div class="book-img">
+                            <img src="<%= result.cover %>">
                         </div>
 
                         <!-- Book Info -->
@@ -46,6 +48,9 @@
                                 <%= result.title %>
                             </h3>
                             <p class="book-author">by <%= result.author %>
+                            </p>
+                            <p class="book-summary">
+                                <%= result.year %>
                             </p>
                         </div>
 
