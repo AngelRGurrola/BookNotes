@@ -31,14 +31,20 @@ p {
   z-index: 100;
 }
 
-.add-btn:hover {
+.add-btn:hover, .add-search-btn:hover {
   background-color: #1D546D;
 }
 
-.add-btn:active {
-  background-color: #1D546D;
+.add-btn, .add-search-btn:active {
   transform: translateY(1px); /* Slight press effect */
 }
+
+.head-container h2, .head-container button {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+}
+
 
 .add-container {
   max-width: 600px;
@@ -64,9 +70,16 @@ p {
 }
 
 .add-search-btn {
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
+  display: inline-block; /* Allows padding and width/height settings */
+  padding: 10px 20px;     /* Space inside the button */
+  background-color: #5F9598; /* Blue background */
+  color: #F3F4F4;           /* White text color */
+  text-decoration: none;  /* Removes the default underline */
+  border-radius: 5px;     /* Rounded corners */
+  border: 1px solid #1D546D; /* A slight border */
+  text-align: center;     /* Centers text within the button */
+  cursor: pointer;        /* Changes cursor to a hand icon on hover */
+  transition: background-color 0.3s ease;
 }
 
 label {

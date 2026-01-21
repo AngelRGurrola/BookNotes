@@ -1,7 +1,11 @@
 <%- include("partials/header.ejs") %>
     <section class="add-container">
 
-        <h2>Add a Book</h2>
+        <div class="header-container">
+            <button onclick="history.back()" class="add-search-btn">Return</button>
+            <h2>Add a Book</h2>
+        </div>
+
 
         <form action="/add/search" method="GET" class="add-form">
 
@@ -24,4 +28,32 @@
         </form>
 
     </section>
-    <%- include("partials/footer.ejs") %>
+    <% if (locals.result) { %>
+        <section class="search-feed">
+            <% results.forEach(result=> { %>
+
+                <div class="book-row">
+
+                    <div class="book-card">
+
+                        <!-- Book Cover -->
+                        <div class="book-img">
+                        </div>
+
+                        <!-- Book Info -->
+                        <div class="book-info">
+                            <h3 class="book-title">
+                                <%= result.title %>
+                            </h3>
+                            <p class="book-author">by <%= result.author %>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <% }) %>
+        </section>
+        <% } %>
+            <%- include("partials/footer.ejs") %>
