@@ -1,5 +1,11 @@
 <%- include("partials/header.ejs") %>
 
+    <section>
+        <div class="add-section">
+            <a href="/add" class="add-btn">Add Book</a>
+        </div>
+    </section>
+
     <section class="book-feed">
         <% if (locals.books) {%>
             <% books.forEach(book=> { %>

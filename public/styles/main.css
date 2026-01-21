@@ -1,5 +1,76 @@
 body {
-    background-color: black;
+    background-color: #061E29;
+}
+
+#title {
+  color: #5F9598;
+}
+
+h2 {
+  color: #5F9598;
+}
+
+p {
+  color: #F3F4F4;
+}
+
+.add-btn {
+  display: inline-block; /* Allows padding and width/height settings */
+  padding: 10px 20px;     /* Space inside the button */
+  background-color: #5F9598; /* Blue background */
+  color: #F3F4F4;           /* White text color */
+  text-decoration: none;  /* Removes the default underline */
+  border-radius: 5px;     /* Rounded corners */
+  border: 1px solid #1D546D; /* A slight border */
+  text-align: center;     /* Centers text within the button */
+  cursor: pointer;        /* Changes cursor to a hand icon on hover */
+  transition: background-color 0.3s ease;
+  position: fixed;
+  right: 5%;
+  top: 3%;
+  z-index: 100;
+}
+
+.add-btn:hover {
+  background-color: #1D546D;
+}
+
+.add-btn:active {
+  background-color: #1D546D;
+  transform: translateY(1px); /* Slight press effect */
+}
+
+.add-container {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.search-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.add-input {
+  padding: 12px;
+  font-size: 16px;
+}
+
+.add-search-btn {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+label {
+  color: #F3F4F4;
 }
 
 .book-feed {
@@ -15,10 +86,10 @@ body {
   display: grid;
   grid-template-columns: 120px 1fr;
   gap: 20px;
-  background: white;
+  background: #061E29;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgb(95, 149, 152);
 }
 
 .book-img img {
@@ -30,11 +101,12 @@ body {
 .book-title {
   font-size: 20px;
   margin-bottom: 4px;
+   color: #5F9598;
 }
 
 .book-author {
   font-style: italic;
-  color: #555;
+  color: #F3F4F4;
   margin-bottom: 6px;
 }
 
@@ -44,7 +116,7 @@ body {
 }
 
 .book-summary {
-  color: #333;
+  color: #F3F4F4;
   line-height: 1.4;
 }
 

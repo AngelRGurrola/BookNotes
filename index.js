@@ -31,6 +31,9 @@ app.get("/", (req,res) => {
     res.render("index.ejs", { books: dummyBooks });
 });
 
+app.get("/add", (req,res) => {
+    res.render("add.ejs");
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

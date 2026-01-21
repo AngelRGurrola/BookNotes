@@ -1,0 +1,27 @@
+<%- include("partials/header.ejs") %>
+    <section class="add-container">
+
+        <h2>Add a Book</h2>
+
+        <form action="/add/search" method="GET" class="add-form">
+
+            <div class="search-options">
+                <label>
+                    <input type="radio" name="searchType" value="title" checked>
+                    Title
+                </label>
+
+                <label>
+                    <input type="radio" name="searchType" value="author">
+                    Author
+                </label>
+            </div>
+
+            <input type="text" name="query" placeholder="Search for a book..." required class="add-input">
+
+            <button type="submit" class="add-search-btn">Search</button>
+
+        </form>
+
+    </section>
+    <%- include("partials/footer.ejs") %>
