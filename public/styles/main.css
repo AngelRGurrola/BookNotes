@@ -133,6 +133,11 @@ label {
   line-height: 1.4;
 }
 
+.plus-btn {
+  font-size: 24px;
+  font-weight: 700;
+}
+
 @media (max-width: 600px) {
   .book-card {
     grid-template-columns: 1fr;

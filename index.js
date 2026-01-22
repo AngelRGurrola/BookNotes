@@ -20,6 +20,9 @@ let dummyBooks = [{
     quick_summary: "THIS BOOK IS GREAT"
 }];
 
+let saveData = {};
+let searchFeed = [];
+
 const db = new pg.Client({
     user: "postgres",
     host: "localhost",
@@ -29,6 +32,7 @@ const db = new pg.Client({
 });
 
 app.get("/", (req, res) => {
+    saveData = {};
     res.render("index.ejs", { books: dummyBooks });
 });
 
@@ -37,30 +41,57 @@ app.get("/add", (req, res) => {
 });
 
 app.post("/add", async (req, res) => {
+    searchFeed = [];
     let URL = "https://openlibrary.org/search.json?";
     const searchType = req.body.searchType;
     const searchValue = req.body.query;
+    let item = 0;
 
     URL = URL + `${searchType}=${searchValue}&limit=10`;
     // console.log(URL);
 
     try {
         const result = await axios.get(URL)
+        // console.log(result.data.docs);
         const books = result.data.docs.map(book => ({
             title: book.title,
-            author: book.author_name?.[0] || "Unknown",
-            cover: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+            authors: book.author_name?.join(", ") || "Unknown",
+            book_img: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
                 : "/images/no-cover.png",
-            year: book.first_publish_year
+            year: book.first_publish_year,
+            work_key: book.key,
+            item: item++
         }));
-        // console.log(books);
+        searchFeed.push(books);
         return res.render("add.ejs", { results: books });
-        
+
     } catch (error) {
         console.log(error);
     }
 
     res.render("add.ejs")
+});
+
+app.post("/save", async (req, res) => {
+    const index = parseInt(req.body.key)
+    saveData = searchFeed[0][index];
+    console.log(`https://openlibrary.org/${saveData.work_key}/editions.json`);
+    try {
+        const result = await axios.get(`https://openlibrary.org/${saveData.work_key}/editions.json`);
+
+        let edition = result.data.entries.find(e => e.isbn_13 || e.isbn_10);
+        saveData.isbn = edition.isbn_13?.[0] || edition.isbn_10?.[0]
+
+        edition = result.data.entries.find(e => e.publishers);
+        saveData.isbn = edition ? (edition.isbn_13?.[0] || edition.isbn_10?.[0]) : null;
+
+        console.log(saveData);
+
+        res.render("add.ejs");
+
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 app.listen(port, () => {

@@ -2,7 +2,7 @@
     <section class="add-container">
 
         <div class="header-container">
-            <button onclick="history.back()" class="add-search-btn">Return</button>
+            <button onclick="location.href='/'" class="add-search-btn">Return</button>
             <h2>Add a Book</h2>
             <p>(Only 10 results per search)</p>
         </div>
@@ -39,7 +39,7 @@
 
                         <!-- Book Cover -->
                         <div class="book-img">
-                            <img src="<%= result.cover %>">
+                            <img src="<%= result.book_img %>">
                         </div>
 
                         <!-- Book Info -->
@@ -47,11 +47,14 @@
                             <h3 class="book-title">
                                 <%= result.title %>
                             </h3>
-                            <p class="book-author">by <%= result.author %>
+                            <p class="book-author">by <%= result.authors %>
                             </p>
                             <p class="book-summary">
                                 <%= result.year %>
                             </p>
+                            <form action="/save" method="post">
+                                <button class="add-search-btn plus-btn" type="submit" name="key" value="<%=result.item %>" >+</button>
+                            </form>
                         </div>
 
                     </div>
