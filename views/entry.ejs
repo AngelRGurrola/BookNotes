@@ -1,0 +1,41 @@
+<%- include("partials/header.ejs") %>
+    <section class="add-container">
+        <div class="header-container">
+            <button onclick="location.href='/add'" class="add-search-btn">Return</button>
+            <h2>Add a Book</h2>
+        </div>
+        <div class="book-row">
+
+            <div class="book-card">
+
+                <!-- Book Cover -->
+                <div class="book-img">
+                    <img src="<%= book.book_img %>">
+                </div>
+
+                <!-- Book Info -->
+                <div class="book-info">
+                    <h3 class="book-title">
+                        <%= book.title %>
+                    </h3>
+                    <p class="book-author">by <%= book.authors %>
+                    </p>
+                    <p class="book-summary">
+                        <%= book.year %>
+                    </p>
+                    <form action="/save" method="post">
+                        <input type="text" name="impression" placeholder="Share your impression..." required class="add-input">
+                        <input type="text" name="note" placeholder="Enter your notes..." required class="add-input">
+                        <p class="book-rating">⭐ <span><input type="number" name="score"></span> / 10</p>
+                        <p class="book-summary">When did you read this book?<span><input type="month" name="data_read"></span></p>
+                        <button class="add-search-btn plus-btn" type="submit" name="key" value="add">Save</button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="form-container">
+        </div>
+    </section>
+    <%- include("partials/footer.ejs") %>

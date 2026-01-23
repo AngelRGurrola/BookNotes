@@ -37,7 +37,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/add", (req, res) => {
-    res.render("add.ejs");
+    if (!searchFeed || searchFeed.length === 0) {
+    return res.render("add.ejs");
+  }
+
+  res.render("add.ejs", { results: searchFeed });;
 });
 
 app.post("/add", async (req, res) => {
@@ -62,7 +66,7 @@ app.post("/add", async (req, res) => {
             work_key: book.key,
             item: item++
         }));
-        searchFeed.push(books);
+        searchFeed = books;
         return res.render("add.ejs", { results: books });
 
     } catch (error) {
@@ -72,10 +76,10 @@ app.post("/add", async (req, res) => {
     res.render("add.ejs")
 });
 
-app.post("/save", async (req, res) => {
-    const index = parseInt(req.body.key)
-    saveData = searchFeed[0][index];
-    console.log(`https://openlibrary.org/${saveData.work_key}/editions.json`);
+app.get("/save", async (req, res) => {
+    const index = req.query.key;
+    saveData = searchFeed[index];
+    // console.log(`https://openlibrary.org/${saveData.work_key}/editions.json`);
     try {
         const result = await axios.get(`https://openlibrary.org/${saveData.work_key}/editions.json`);
 
@@ -84,13 +88,14 @@ app.post("/save", async (req, res) => {
 
         edition = result.data.entries.find(e => e.publishers);
         saveData.isbn = edition ? (edition.isbn_13?.[0] || edition.isbn_10?.[0]) : null;
+        saveData.page_count = edition ? (edition.number_of_pages || edition.pagination) : null;
+        saveData.publisher = edition ? edition.publishers?.[0] : null;
 
-        console.log(saveData);
-
-        res.render("add.ejs");
+        res.render("entry.ejs", { book: saveData });
 
     } catch (error) {
         console.log(error);
+        res.redirect("/add");
     }
 });
 
