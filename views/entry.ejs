@@ -24,10 +24,13 @@
                         <%= book.year %>
                     </p>
                     <form action="/save" method="post">
-                        <input type="text" name="impression" placeholder="Share your impression..." required class="add-input">
-                        <input type="text" name="note" placeholder="Enter your notes..." required class="add-input">
-                        <p class="book-rating">⭐ <span><input type="number" name="score"></span> / 10</p>
-                        <p class="book-summary">When did you read this book?<span><input type="month" name="data_read"></span></p>
+                        <textarea name="impression" placeholder="Share your impression..." required
+                            class="user-input"></textarea>
+                        <textarea name="notes" placeholder="Enter your notes..." required class="user-input"></textarea>
+                        <p class="book-rating">⭐ <span><input type="number" name="score" class="add-score"></span> / 10
+                        </p>
+                        <p class="book-summary">When did you read this book?<span><input type="month" name="data_read"
+                                    class="add-date_read"></span></p>
                         <button class="add-search-btn plus-btn" type="submit" name="key" value="add">Save</button>
                     </form>
                 </div>
@@ -38,4 +41,11 @@
         <div class="form-container">
         </div>
     </section>
+    <script>
+        const img = document.querySelector(".book-cover");
+
+        if (window.innerWidth < 600) {
+            img.src = img.src.replace("-M.jpg", "-L.jpg");
+        }
+    </script>
     <%- include("partials/footer.ejs") %>

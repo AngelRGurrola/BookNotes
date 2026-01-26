@@ -138,6 +138,24 @@ label {
   font-weight: 700;
 }
 
+.user-input {
+  width: 60%;
+  height: 10vh;
+  margin-bottom: 5%;
+  padding: 10px;
+  resize: vertical;   /* optional */
+}
+
+.add-score {
+  width: 10%;
+  height: 2vh;
+  margin-bottom: 3%;
+}
+
+.add-date_read {
+  margin-left: 3%;
+}
+
 @media (max-width: 600px) {
   .book-card {
     grid-template-columns: 1fr;
