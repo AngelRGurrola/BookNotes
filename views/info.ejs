@@ -21,20 +21,51 @@
                     <p class="info-details">ISBN: <%= book.isbn %>
                     </p>
 
-                    <h3 class="book-title">Your Rating</h3>
-                    <p class="book-rating">⭐ <%= book.score %> / 10</p>
+                    <form class="edit" action="/edit" method="post">
+                        <input type="hidden" name="updatedBookId" value="<%=book.id%>">
 
-                    <h3 class="book-title">Impression</h3>
-                    <p class="book-summary">
-                        <%= book.comment %>
-                    </p>
+                        <h3 class="book-title">Your Rating</h3>
+                        <p class="book-rating" id="score">⭐ <%= book.score %> / 10</p>
+                        <p class="book-rating" id="scoreEditP" hidden="true">⭐ <input id="scoreEdit" type="number"
+                                name="updatedScore" class="add-score" value="<%= book.score %>" autocomplete="off"
+                                autofocus="true" hidden="true"> / 10</p>
 
-                    <h3 class="book-title">Notes</h3>
-                    <p class="book-summary">
-                        <%= book.notes %>
-                    </p>
+                        <h3 class="book-title">Impression</h3>
+                        <p class="book-summary" id="comment">
+                            <%= book.comment %>
+                        </p>
+                        <p class="book-summary" id="commentEditP" hidden="true"><textarea id="commentEdit"
+                                name="updatedComment" class="user-textarea" rows="4"><%= book.comment %></textarea></p>
+
+                        <h3 class="book-title">Notes</h3>
+                        <p class="book-summary" id="notes">
+                            <%= book.notes %>
+                        </p>
+                        <p class="book-summary" id="notesEditP" hidden="true"><textarea id="notesEdit"
+                                name="updatedNotes" class="user-textarea" rows="6"><%= book.notes %></textarea></p>
+
+                        <button id="done" class="add-search-btn hidden" type="submit">Save Changes</button>
+                    </form>
+                    <button id="edit" class="add-search-btn" onclick="handler('<%=book.id%>')">Edit</button>
+
                 </div>
             </div>
         </div>
+        <script>
+            function handler(id) {
+                document.getElementById("score").setAttribute("hidden", true);
+                document.getElementById("comment").setAttribute("hidden", true);
+                document.getElementById("notes").setAttribute("hidden", true);
+                document.getElementById("edit").classList.add("hidden");
+                document.getElementById("done").classList.remove("hidden");
+                document.getElementById("scoreEditP").removeAttribute("hidden");
+                document.getElementById("scoreEdit").removeAttribute("hidden");
+                document.getElementById("commentEditP").removeAttribute("hidden");
+                document.getElementById("commentEdit").removeAttribute("hidden");
+                document.getElementById("notesEditP").removeAttribute("hidden");
+                document.getElementById("notesEdit").removeAttribute("hidden");
+
+            }
+        </script>
     </section>
     <%- include("partials/footer.ejs"); %>

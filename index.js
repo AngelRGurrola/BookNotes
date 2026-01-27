@@ -71,7 +71,7 @@ app.get("/info/:id", async (req, res) => {
             [id]
         );
 
-        if(result.rows.length === 0){
+        if (result.rows.length === 0) {
             return res.status(404).send("book not found");
         }
 
@@ -79,6 +79,33 @@ app.get("/info/:id", async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).send("Server Error");
+    }
+});
+
+app.post("/edit", async (req, res) => {
+    const id = req.body.updatedBookId;
+    const score = req.body.updatedScore;
+    const comment = req.body.updatedComment;
+    const notes = req.body.updatedNotes
+
+    try {
+        await db.query("BEGIN");
+
+        await db.query(
+            `UPDATE opinions SET score=$1, comment=$2 WHERE book_id=$3`,
+            [score, comment, id]
+        );
+
+        await db.query(
+            `UPDATE notes SET content=$1 WHERE book_id=$2`,
+            [notes, id]
+        );
+
+        await db.query("COMMIT");
+        res.redirect("/");
+    } catch (err) {
+        await db.query("ROLLBACK");
+        console.error(err);
     }
 });
 
