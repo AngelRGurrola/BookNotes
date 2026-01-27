@@ -178,7 +178,7 @@ app.post("/save", async (req, res) => {
         saveData.notes = req.body.notes;
         saveData.date_read = req.body.data_read;
         saveData.score = req.body.score;
-        console.log(saveData);
+        // console.log(saveData);
 
         const bookResult = await db.query(
             `INSERT INTO books (title, author, publisher, publication, page_count, work_key, isbn)
@@ -216,6 +216,20 @@ app.post("/save", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Server error");
+    }
+});
+
+app.post("/delete", async (req,res) => {
+    const id = req.body.deletedBookId;
+    try {
+        await db.query("DELETE FROM opinions WHERE book_id = $1", [id]);
+        await db.query("DELETE FROM notes WHERE book_id = $1", [id]);
+        await db.query("DELETE FROM images WHERE book_id = $1", [id]);
+        await db.query("DELETE FROM books WHERE id = $1", [id]);
+        res.redirect("/");
+    } catch(error) {
+        console.log(error);
+        res.status(500).send("Server Error")
     }
 });
 

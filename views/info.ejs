@@ -5,6 +5,10 @@
             <div class="book-card">
                 <div class="book-img">
                     <img src="<%= book.book_img %>" alt="cover">
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="deletedBookId" value="<%=book.id%>">
+                        <button id="delete" class="hidden add-search-btn-delete" type="submit">Delete</button>
+                    </form>
                 </div>
                 <div class="book-info">
                     <h1 class="book-title">
@@ -58,6 +62,7 @@
                 document.getElementById("notes").setAttribute("hidden", true);
                 document.getElementById("edit").classList.add("hidden");
                 document.getElementById("done").classList.remove("hidden");
+                document.getElementById("delete").classList.remove("hidden");
                 document.getElementById("scoreEditP").removeAttribute("hidden");
                 document.getElementById("scoreEdit").removeAttribute("hidden");
                 document.getElementById("commentEditP").removeAttribute("hidden");

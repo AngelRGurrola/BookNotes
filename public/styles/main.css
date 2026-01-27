@@ -51,6 +51,36 @@ p {
   /* Slight press effect */
 }
 
+.add-search-btn-delete:hover {
+  background-color: #590c16;
+}
+
+.add-search-btn-delete:active {
+  transform: translateY(1px);
+  /* Slight press effect */
+}
+
+.add-search-btn-delete {
+  display: inline-block;
+  /* Allows padding and width/height settings */
+  padding: 10px 20px;
+  margin-top: 3%;
+  /* Space inside the button */
+  background-color: #931324;
+  /* Blue background #931324*/
+  color: #F3F4F4;
+  /* White text color */
+  text-decoration: none;
+  /* Removes the default underline */
+  border-radius: 5px;
+  /* Rounded corners */
+  text-align: center;
+  /* Centers text within the button */
+  cursor: pointer;
+  /* Changes cursor to a hand icon on hover */
+  transition: background-color 0.3s ease;
+}
+
 .head-container h2,
 .head-container button {
   display: inline-block;
