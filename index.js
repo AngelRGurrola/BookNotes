@@ -9,17 +9,6 @@ const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-let dummyBooks = [{
-    id: 12345,
-    title: "Things Fall Apart",
-    author: "Chinua Achebe",
-    publisher: "Penguin",
-    publication: "1965",
-    page_count: 223,
-    rating: 3,
-    quick_summary: "This book is amazing and immersive, the story takes place in Hawaii's island of honolulu, and the time period is around the early 1900s leading up to and during WWII"
-}];
-
 let saveData = {};
 let searchFeed = [];
 
@@ -39,7 +28,8 @@ app.get("/", async (req, res) => {
     const result = await db.query(`SELECT * FROM books, images, notes, opinions
         WHERE books.id = images.book_id
         AND books.id = notes.book_id
-        AND books.id = opinions.book_id`
+        AND books.id = opinions.book_id
+        ORDER BY books.id DESC;`
     );
 
     res.render("index.ejs", { books: result.rows });
