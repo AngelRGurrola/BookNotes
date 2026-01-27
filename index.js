@@ -115,9 +115,9 @@ app.post("/save", async (req, res) => {
        RETURNING id`,
       [
         saveData.title,
-        saveData.author,
+        saveData.authors,
         saveData.publisher,
-        saveData.publication,
+        saveData.year,
         saveData.page_count,
         saveData.work_key,
         saveData.isbn
