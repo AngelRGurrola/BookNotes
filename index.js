@@ -17,7 +17,7 @@ let dummyBooks = [{
     publication: "1965",
     page_count: 223,
     rating: 3,
-    quick_summary: "THIS BOOK IS GREAT"
+    quick_summary: "This book is amazing and immersive, the story takes place in Hawaii's island of honolulu, and the time period is around the early 1900s leading up to and during WWII"
 }];
 
 let saveData = {};
@@ -31,6 +31,8 @@ const db = new pg.Client({
     port: 5432
 });
 
+db.connect();
+
 app.get("/", (req, res) => {
     saveData = {};
     res.render("index.ejs", { books: dummyBooks });
@@ -38,10 +40,10 @@ app.get("/", (req, res) => {
 
 app.get("/add", (req, res) => {
     if (!searchFeed || searchFeed.length === 0) {
-    return res.render("add.ejs");
-  }
+        return res.render("add.ejs");
+    }
 
-  res.render("add.ejs", { results: searchFeed });;
+    res.render("add.ejs", { results: searchFeed });;
 });
 
 app.post("/add", async (req, res) => {
@@ -97,6 +99,53 @@ app.get("/save", async (req, res) => {
         console.log(error);
         res.redirect("/add");
     }
+});
+
+app.post("/save", async (req, res) => {
+    try {
+    saveData.comment = req.body.impression;
+    saveData.notes = req.body.notes;
+    saveData.date_read = req.body.data_read;
+    saveData.score = req.body.score;
+    console.log(saveData);
+
+    const bookResult = await db.query(
+      `INSERT INTO books (title, author, publisher, publication, page_count, work_key, isbn)
+       VALUES ($1,$2,$3,$4,$5,$6,$7)
+       RETURNING id`,
+      [
+        saveData.title,
+        saveData.authors,
+        saveData.publisher,
+        saveData.year,
+        saveData.page_count,
+        saveData.work_key,
+        saveData.isbn
+      ]
+    );
+
+    const bookId = bookResult.rows[0].id;
+
+    await db.query(
+      "INSERT INTO notes (book_id, content) VALUES ($1, $2)",
+      [bookId, saveData.notes]
+    );
+
+    await db.query(
+      "INSERT INTO opinions (book_id, comment, score, date_read) VALUES ($1, $2, $3, $4)",
+      [bookId, saveData.comment, saveData.score, saveData.date_read + "-01"]
+    );
+
+    await db.query(
+      "INSERT INTO images (book_id, book_img) VALUES ($1, $2)",
+      [bookId, saveData.book_img]
+    );
+
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 app.listen(port, () => {
