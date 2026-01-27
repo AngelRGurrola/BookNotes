@@ -1,5 +1,5 @@
 body {
-    background-color: #061E29;
+  background-color: #061E29;
 }
 
 #title {
@@ -15,15 +15,24 @@ p {
 }
 
 .add-btn {
-  display: inline-block; /* Allows padding and width/height settings */
-  padding: 10px 20px;     /* Space inside the button */
-  background-color: #5F9598; /* Blue background */
-  color: #F3F4F4;           /* White text color */
-  text-decoration: none;  /* Removes the default underline */
-  border-radius: 5px;     /* Rounded corners */
-  border: 1px solid #1D546D; /* A slight border */
-  text-align: center;     /* Centers text within the button */
-  cursor: pointer;        /* Changes cursor to a hand icon on hover */
+  display: inline-block;
+  /* Allows padding and width/height settings */
+  padding: 10px 20px;
+  /* Space inside the button */
+  background-color: #5F9598;
+  /* Blue background */
+  color: #F3F4F4;
+  /* White text color */
+  text-decoration: none;
+  /* Removes the default underline */
+  border-radius: 5px;
+  /* Rounded corners */
+  border: 1px solid #1D546D;
+  /* A slight border */
+  text-align: center;
+  /* Centers text within the button */
+  cursor: pointer;
+  /* Changes cursor to a hand icon on hover */
   transition: background-color 0.3s ease;
   position: fixed;
   right: 5%;
@@ -31,15 +40,19 @@ p {
   z-index: 100;
 }
 
-.add-btn:hover, .add-search-btn:hover {
+.add-btn:hover,
+.add-search-btn:hover {
   background-color: #1D546D;
 }
 
-.add-btn, .add-search-btn:active {
-  transform: translateY(1px); /* Slight press effect */
+.add-btn,
+.add-search-btn:active {
+  transform: translateY(1px);
+  /* Slight press effect */
 }
 
-.head-container h2, .head-container button {
+.head-container h2,
+.head-container button {
   display: inline-block;
   vertical-align: middle;
   margin: 0;
@@ -70,15 +83,24 @@ p {
 }
 
 .add-search-btn {
-  display: inline-block; /* Allows padding and width/height settings */
-  padding: 10px 20px;     /* Space inside the button */
-  background-color: #5F9598; /* Blue background */
-  color: #F3F4F4;           /* White text color */
-  text-decoration: none;  /* Removes the default underline */
-  border-radius: 5px;     /* Rounded corners */
-  border: 1px solid #1D546D; /* A slight border */
-  text-align: center;     /* Centers text within the button */
-  cursor: pointer;        /* Changes cursor to a hand icon on hover */
+  display: inline-block;
+  /* Allows padding and width/height settings */
+  padding: 10px 20px;
+  /* Space inside the button */
+  background-color: #5F9598;
+  /* Blue background */
+  color: #F3F4F4;
+  /* White text color */
+  text-decoration: none;
+  /* Removes the default underline */
+  border-radius: 5px;
+  /* Rounded corners */
+  border: 1px solid #1D546D;
+  /* A slight border */
+  text-align: center;
+  /* Centers text within the button */
+  cursor: pointer;
+  /* Changes cursor to a hand icon on hover */
   transition: background-color 0.3s ease;
 }
 
@@ -95,14 +117,24 @@ label {
   padding: 0 20px;
 }
 
+.book-row-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.book-row-link:hover {
+  background-color: #1D546D;
+}
+
 .book-card {
   display: grid;
   grid-template-columns: 120px 1fr;
   gap: 20px;
   background: #061E29;
   padding: 20px;
-  /* border-radius: 10px;
-  box-shadow: 0 4px 10px rgb(95, 149, 152); */
+  border-radius: 15px;
+  /* box-shadow: 0 4px 10px rgb(95, 149, 152); */
 }
 
 .book-img img {
@@ -114,7 +146,7 @@ label {
 .book-title {
   font-size: 20px;
   margin-bottom: 4px;
-   color: #5F9598;
+  color: #5F9598;
 }
 
 .book-author {
@@ -131,6 +163,13 @@ label {
 .book-summary {
   color: #F3F4F4;
   line-height: 1.4;
+  text-align: left;
+}
+
+.info-details {
+  color: #F3F4F4;
+  line-height: 0.5;
+  text-align:center;
 }
 
 .plus-btn {
@@ -143,7 +182,8 @@ label {
   height: 10vh;
   margin-bottom: 5%;
   padding: 10px;
-  resize: vertical;   /* optional */
+  resize: vertical;
+  /* optional */
 }
 
 .add-score {

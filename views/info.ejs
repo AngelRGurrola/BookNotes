@@ -1,0 +1,40 @@
+<%- include("partials/header.ejs"); %>
+    <section class="add-container">
+        <button onclick="location.href='/'" class="add-search-btn">Return</button>
+        <div class="book-row">
+            <div class="book-card">
+                <div class="book-img">
+                    <img src="<%= book.book_img %>" alt="cover">
+                </div>
+                <div class="book-info">
+                    <h1 class="book-title">
+                        <%= book.title %>
+                    </h1>
+                    <p class="book-author">By <%= book.author %>
+                    </p>
+                    <p class="info-details">Publisher: <%= book.publisher %>
+                    </p>
+                    <p class="info-details">Published: <%= book.publication %>
+                    </p>
+                    <p class="info-details">Pages: <%= book.page_count %>
+                    </p>
+                    <p class="info-details">ISBN: <%= book.isbn %>
+                    </p>
+
+                    <h3 class="book-title">Your Rating</h3>
+                    <p class="book-rating">⭐ <%= book.score %> / 10</p>
+
+                    <h3 class="book-title">Impression</h3>
+                    <p class="book-summary">
+                        <%= book.comment %>
+                    </p>
+
+                    <h3 class="book-title">Notes</h3>
+                    <p class="book-summary">
+                        <%= book.notes %>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <%- include("partials/footer.ejs"); %>

@@ -9,31 +9,34 @@
     <section class="book-feed">
         <% if (locals.books) {%>
             <% books.forEach(book=> { %>
+                <a href="/info/<%= book.id %>" class="book-row-link">
+                    <div class="book-row">
 
-                <div class="book-row">
+                        <div class="book-card">
 
-                    <div class="book-card">
+                            <!-- Book Cover -->
+                            <div class="book-img">
+                                <img src="<%= book.book_img %>">
+                            </div>
 
-                        <!-- Book Cover -->
-                        <div class="book-img">
-                        </div>
+                            <!-- Book Info -->
+                            <div class="book-info">
+                                <h3 class="book-title">
+                                    <%= book.title %>
+                                </h3>
+                                <p class="book-author">by <%= book.author %>
+                                </p>
+                                <p class="book-rating">⭐ <%= book.score %> / 10</p>
+                                <p class="book-summary">
+                                    <%= book.comment %>
+                                </p>
+                            </div>
 
-                        <!-- Book Info -->
-                        <div class="book-info">
-                            <h3 class="book-title">
-                                <%= book.title %>
-                            </h3>
-                            <p class="book-author">by <%= book.author %>
-                            </p>
-                            <p class="book-rating">⭐ <%= book.rating %> / 10</p>
-                            <p class="book-summary">
-                                <%= book.quick_summary %>
-                            </p>
                         </div>
 
                     </div>
 
-                </div>
+                </a>
 
                 <% }) %>
                     <% } %>
