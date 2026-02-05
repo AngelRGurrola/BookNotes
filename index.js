@@ -369,7 +369,7 @@ passport.use("google",
         clientID: process.env.GOOGLE_CLIENT,
         clientSecret: process.env.GOOGLE_SECRET,
         callbackURL: "http://localhost:3000/auth/google/book",
-        userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
     },
         async (accessToken, refreshToken, profile, cb) => {
             console.log(profile);
@@ -378,7 +378,7 @@ passport.use("google",
                     [profile.email]
                 );
 
-                if (result.rows.lenght === 0) {
+                if (result.rows.length === 0) {
                     const newUser = await db.query("INSERT INTO users (email, password) VALUES ($1, $2);",
                         [profile.email, "google"]
                     );
