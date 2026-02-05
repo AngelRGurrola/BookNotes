@@ -14,6 +14,45 @@ p {
   color: #F3F4F4;
 }
 
+.login-title {
+  color: #F3F4F4;
+}
+
+.btn-login,
+.btn-register {
+
+  padding: 10px 20px;
+  /* Space inside the button */
+  background-color: #5F9598;
+  /* Blue background */
+  color: #F3F4F4;
+  /* White text color */
+  text-decoration: none;
+  /* Removes the default underline */
+  border-radius: 5px;
+  /* Rounded corners */
+  border: 1px solid #1D546D;
+  /* A slight border */
+  text-align: center;
+  /* Centers text within the button */
+  cursor: pointer;
+  /* Changes cursor to a hand icon on hover */
+  transition: background-color 0.3s ease;
+}
+
+
+.btn-login:hover,
+.btn-register:hover {
+  background-color: #1D546D;
+  color: #F3F4F4;
+}
+
+.btn-register,
+.btn-login {
+  transform: translateY(1px);
+  /* Slight press effect */
+}
+
 .add-btn {
   display: inline-block;
   /* Allows padding and width/height settings */
@@ -213,7 +252,7 @@ label {
 .info-details {
   color: #F3F4F4;
   line-height: 0.5;
-  text-align:center;
+  text-align: center;
 }
 
 .plus-btn {

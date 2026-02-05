@@ -7,6 +7,7 @@
     </section>
 
     <section class="book-feed">
+        <a href="/logout" class="btn-lg btn-login">Log Out</a>
         <% if (locals.books) {%>
             <% books.forEach(book=> { %>
                 <a href="/info/<%= book.id %>" class="book-row-link">

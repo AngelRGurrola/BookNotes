@@ -2,43 +2,88 @@ import express from "express";
 import pg from "pg";
 import bodyParser from "body-parser";
 import axios from "axios";
+import bcrypt from "bcrypt";
+import passport from "passport";
+import { Strategy } from "passport-local";
+import session from "express-session";
+import GoogleStrategy from "passport-google-oauth2";
+import env from "dotenv";
 
 const app = express();
 const port = 3000;
+const saltRounds = 10;
+env.config();
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+}));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 let saveData = {};
 let searchFeed = [];
 
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "library",
-    password: "Ange1naruto",
-    port: 5432
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DATABASE,
+    password: process.env.PG_PASSWORD,
+    port: process.env.PG_PORT
 });
 
 db.connect();
 
-app.get("/", async (req, res) => {
-    saveData = {};
+// ------------------------------------- GET -------------------------------------------------
 
-    const result = await db.query(`SELECT * FROM books, images, notes, opinions
+app.get("/", (req, res) => {
+    res.render("home.ejs");
+});
+
+app.get("/logout", (req, res) => {
+    req.logout(function (err) {
+        if (err) return next(err);
+        res.redirect("/");
+    });
+});
+
+app.get("/login", (req, res) => {
+    res.render("login.ejs");
+});
+
+app.get("/register", (req, res) => {
+    res.render("register.ejs");
+});
+
+app.get("/book", async (req, res) => {
+    console.log(req.user);
+    if (req.isAuthenticated()) {
+        saveData = {};
+
+        const result = await db.query(`SELECT * FROM books, images, notes, opinions
         WHERE books.id = images.book_id
         AND books.id = notes.book_id
         AND books.id = opinions.book_id
         ORDER BY books.id DESC;`
-    );
+        );
 
-    res.render("index.ejs", { books: result.rows });
+        res.render("index.ejs", { books: result.rows });
+    } else {
+        res.redirect("/login");
+    }
+
 });
 
 app.get("/info/:id", async (req, res) => {
-    const id = req.params.id;
-    try {
-        const result = await db.query(`
+    if (requ.isAuthenticated()) {
+        const id = req.params.id;
+        try {
+            const result = await db.query(`
             SELECT 
                 b.id,
                 b.title,
@@ -58,18 +103,99 @@ app.get("/info/:id", async (req, res) => {
             LEFT JOIN notes n ON n.book_id = b.id
             WHERE b.id = $1
             `,
-            [id]
-        );
+                [id]
+            );
 
-        if (result.rows.length === 0) {
-            return res.status(404).send("book not found");
+            if (result.rows.length === 0) {
+                return res.status(404).send("book not found");
+            }
+
+            res.render("info.ejs", { book: result.rows[0] });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Server Error");
+        }
+    } else {
+        res.redirect("/login");
+    }
+
+});
+
+app.get("/add", (req, res) => {
+    if (req.isAuthenticated()) {
+        if (!searchFeed || searchFeed.length === 0) {
+            return res.render("add.ejs");
         }
 
-        res.render("info.ejs", { book: result.rows[0] });
+        res.render("add.ejs", { results: searchFeed });;
+    } else {
+        res.redirect("/login");
+    }
+
+});
+
+app.get("/save", async (req, res) => {
+    if (req.isAuthenticated()) {
+        const index = req.query.key;
+        saveData = searchFeed[index];
+        // console.log(`https://openlibrary.org/${saveData.work_key}/editions.json`);
+        try {
+            const result = await axios.get(`https://openlibrary.org/${saveData.work_key}/editions.json`);
+
+            let edition = result.data.entries.find(e => e.isbn_13 || e.isbn_10);
+            saveData.isbn = edition.isbn_13?.[0] || edition.isbn_10?.[0]
+
+            edition = result.data.entries.find(e => e.publishers);
+            saveData.isbn = edition ? (edition.isbn_13?.[0] || edition.isbn_10?.[0]) : null;
+            saveData.page_count = edition ? (edition.number_of_pages || edition.pagination) : null;
+            saveData.publisher = edition ? edition.publishers?.[0] : null;
+
+            res.render("entry.ejs", { book: saveData });
+
+        } catch (error) {
+            console.log(error);
+            res.redirect("/add");
+        }
+    } else {
+        req.redirect("/login");
+    }
+
+});
+
+// ------------------------------------- POST -------------------------------------------------
+
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/book",
+    failureRedirect: "/login",
+}))
+
+app.post("/register", async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    try {
+        const checkResult = await db.query("SELECT * FROM users where email = $1", [email]);
+        if (checkResult.rows.length > 0) {
+            req.redirect("/login");
+        } else {
+            bcrypt.hash(password, saltRounds, async (err, hash) => {
+                if (err) {
+                    console.error("Error hashing password:", err);
+                } else {
+                    const result = await db.query("INSERT INTO users (email,password) VALUES ($1, $2);",
+                        [email, hash]);
+                    const user = result.rows[0];
+                    req.login(user, (err) => {
+                        console.log("Registration Complete")
+                        res.redirect("/book");
+                    });
+                }
+            });
+        }
     } catch (error) {
         console.log(error);
-        res.status(500).send("Server Error");
     }
+
 });
 
 app.post("/edit", async (req, res) => {
@@ -92,20 +218,14 @@ app.post("/edit", async (req, res) => {
         );
 
         await db.query("COMMIT");
-        res.redirect("/");
+        res.redirect("/book");
     } catch (err) {
         await db.query("ROLLBACK");
         console.error(err);
     }
 });
 
-app.get("/add", (req, res) => {
-    if (!searchFeed || searchFeed.length === 0) {
-        return res.render("add.ejs");
-    }
 
-    res.render("add.ejs", { results: searchFeed });;
-});
 
 app.post("/add", async (req, res) => {
     searchFeed = [];
@@ -139,28 +259,7 @@ app.post("/add", async (req, res) => {
     res.render("add.ejs")
 });
 
-app.get("/save", async (req, res) => {
-    const index = req.query.key;
-    saveData = searchFeed[index];
-    // console.log(`https://openlibrary.org/${saveData.work_key}/editions.json`);
-    try {
-        const result = await axios.get(`https://openlibrary.org/${saveData.work_key}/editions.json`);
 
-        let edition = result.data.entries.find(e => e.isbn_13 || e.isbn_10);
-        saveData.isbn = edition.isbn_13?.[0] || edition.isbn_10?.[0]
-
-        edition = result.data.entries.find(e => e.publishers);
-        saveData.isbn = edition ? (edition.isbn_13?.[0] || edition.isbn_10?.[0]) : null;
-        saveData.page_count = edition ? (edition.number_of_pages || edition.pagination) : null;
-        saveData.publisher = edition ? edition.publishers?.[0] : null;
-
-        res.render("entry.ejs", { book: saveData });
-
-    } catch (error) {
-        console.log(error);
-        res.redirect("/add");
-    }
-});
 
 app.post("/save", async (req, res) => {
     try {
@@ -202,25 +301,66 @@ app.post("/save", async (req, res) => {
             [bookId, saveData.book_img]
         );
 
-        res.redirect("/");
+        res.redirect("/book");
     } catch (err) {
         console.error(err);
         res.status(500).send("Server error");
     }
 });
 
-app.post("/delete", async (req,res) => {
+app.post("/delete", async (req, res) => {
     const id = req.body.deletedBookId;
     try {
         await db.query("DELETE FROM opinions WHERE book_id = $1", [id]);
         await db.query("DELETE FROM notes WHERE book_id = $1", [id]);
         await db.query("DELETE FROM images WHERE book_id = $1", [id]);
         await db.query("DELETE FROM books WHERE id = $1", [id]);
-        res.redirect("/");
-    } catch(error) {
+        res.redirect("/book");
+    } catch (error) {
         console.log(error);
         res.status(500).send("Server Error")
     }
+});
+
+passport.use("local",
+    new Strategy(async function verify(email, password, cb) {
+        try {
+            const result = await db.query("SELECT * FROM users WHERE email = $1",
+                [email]
+            );
+            if (result.rows.length > 0) {
+                const user = result.rows[0];
+                const storedHashedPassword = user.password;
+                bcrypt.compare(password, storedHashedPassword, (err, valid) => {
+                    if (err) {
+                        // error with password check
+                        console.error("Error comparing passwords:", err);
+                        return cb(err);
+                    } else {
+                        if (valid) {
+                            // password check is passed
+                            return cb(null, user);
+                        } else {
+                            // did not pass pasword check
+                            return cb(null, false);
+                        }
+                    }
+                });
+            } else {
+                console.log("User not found");
+                return cb(null, false);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }));
+
+passport.serializeUser((user, cb) => {
+    cb(null, user);
+});
+
+passport.deserializeUser((user, cb) => {
+    cb(null, user);
 });
 
 app.listen(port, () => {

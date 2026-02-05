@@ -3,3 +3,4 @@ package-lock.json
 package.json
 schema.sql
 node_modules/
+.env
